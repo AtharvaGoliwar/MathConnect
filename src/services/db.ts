@@ -1,24 +1,31 @@
 import { User, Role, Assignment } from '../types';
 
-// Safely resolve the API URL to avoid "undefined" strings in the URL
+// Safely resolve the API URL
 const getApiUrl = () => {
-  try {
-    // Check if process.env exists (usually during build time for React apps)
-    if (typeof process !== 'undefined' && process.env && process.env.REACT_APP_API_URL) {
-      return process.env.REACT_APP_API_URL;
-    }
-  } catch (e) {
-    // Fallback if process is not defined
+  // Try to get from window.process (which we shimmed in index.tsx)
+  const processEnv = (window as any).process?.env;
+  
+  // Check standard environment variable names
+  const envUrl = processEnv?.REACT_APP_API_URL || processEnv?.VITE_API_URL || processEnv?.API_URL;
+  
+  if (envUrl && envUrl !== 'undefined') {
+    return envUrl;
+  }
+
+  // Production Fallback: If hosted on a real domain, use relative path
+  if (typeof window !== 'undefined' && 
+      window.location.hostname !== 'localhost' && 
+      window.location.hostname !== '127.0.0.1') {
+    return '/api';
   }
   
-  // Default to localhost for development
+  // Local Development Fallback
   return 'http://localhost:5000/api';
 };
 
 const API_BASE_URL = getApiUrl();
 
 export const db = {
-  // Initialization is now handled by the server connection
   init: () => {},
 
   users: {

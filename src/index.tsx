@@ -1,3 +1,11 @@
+// Process Shim for environments where build tools don't polyfill it
+if (
+  typeof window !== "undefined" &&
+  typeof (window as any).process === "undefined"
+) {
+  (window as any).process = { env: {} };
+}
+
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";

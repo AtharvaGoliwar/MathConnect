@@ -1,15 +1,22 @@
 import { User } from '../types';
 import { db } from './db';
 
-const COOKIE_NAME = 'math_connect_session';
+const COOKIE_NAME = 'tuition_connect_session';
 
 // Safely resolve the API URL
 const getApiUrl = () => {
-  try {
-    if (typeof process !== 'undefined' && process.env && process.env.REACT_APP_API_URL) {
-      return process.env.REACT_APP_API_URL;
-    }
-  } catch (e) {}
+  const processEnv = (window as any).process?.env;
+  const envUrl = processEnv?.REACT_APP_API_URL || processEnv?.VITE_API_URL || processEnv?.API_URL;
+  
+  if (envUrl && envUrl !== 'undefined') {
+    return envUrl;
+  }
+  
+  if (typeof window !== 'undefined' && 
+      window.location.hostname !== 'localhost' && 
+      window.location.hostname !== '127.0.0.1') {
+    return '/api';
+  }
   return 'http://localhost:5000/api';
 };
 
