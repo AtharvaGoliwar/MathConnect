@@ -1,31 +1,10 @@
 import { User, Role, Assignment } from '../types';
 
-// Safely resolve the API URL
-const getApiUrl = () => {
-  // Try to get from window.process (which we shimmed in index.tsx)
-  const processEnv = (window as any).process?.env;
-  
-  // Check standard environment variable names
-  const envUrl = processEnv?.REACT_APP_API_URL || processEnv?.VITE_API_URL || processEnv?.API_URL;
-  
-  if (envUrl && envUrl !== 'undefined') {
-    return envUrl;
-  }
-
-  // Production Fallback: If hosted on a real domain, use relative path
-  if (typeof window !== 'undefined' && 
-      window.location.hostname !== 'localhost' && 
-      window.location.hostname !== '127.0.0.1') {
-    return '/api';
-  }
-  
-  // Local Development Fallback
-  return 'http://localhost:5000/api';
-};
-
-const API_BASE_URL = getApiUrl();
+// In production, REACT_APP_API_URL will be set. Locally it falls back to localhost.
+const API_BASE_URL = process.env.REACT_APP_API_URL 
 
 export const db = {
+  // Initialization is now handled by the server connection
   init: () => {},
 
   users: {
