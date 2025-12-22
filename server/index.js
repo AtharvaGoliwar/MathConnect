@@ -78,6 +78,11 @@ const seedAdmin = async () => {
 
 // --- ROUTES ---
 
+// Health Check
+app.get('/', (req, res) => {
+  res.send('MathConnect API is running.');
+});
+
 // Auth
 app.post('/api/auth/login', async (req, res) => {
   const { email, password } = req.body;
@@ -192,7 +197,7 @@ mongoose.connect(MONGODB_URI)
   .then(async () => {
     console.log('Connected to MongoDB');
     await seedAdmin();
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    app.listen(PORT, '0.0.0.0', () => console.log(`Server running on port ${PORT}`));
   })
   .catch(err => {
     console.error('MongoDB Connection Error:', err);

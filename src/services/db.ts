@@ -1,7 +1,21 @@
 import { User, Role, Assignment } from '../types';
 
-// In production, REACT_APP_API_URL will be set. Locally it falls back to localhost.
-const API_BASE_URL = process.env.REACT_APP_API_URL 
+// Safely resolve the API URL to avoid "undefined" strings in the URL
+const getApiUrl = () => {
+  try {
+    // Check if process.env exists (usually during build time for React apps)
+    if (typeof process !== 'undefined' && process.env && process.env.REACT_APP_API_URL) {
+      return process.env.REACT_APP_API_URL;
+    }
+  } catch (e) {
+    // Fallback if process is not defined
+  }
+  
+  // Default to localhost for development
+  return 'http://localhost:5000/api';
+};
+
+const API_BASE_URL = getApiUrl();
 
 export const db = {
   // Initialization is now handled by the server connection

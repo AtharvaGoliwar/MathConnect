@@ -1,8 +1,19 @@
 import { User } from '../types';
-import { db } from '../services/db';
+import { db } from './db';
 
 const COOKIE_NAME = 'math_connect_session';
-const API_BASE_URL = process.env.REACT_APP_API_URL;
+
+// Safely resolve the API URL
+const getApiUrl = () => {
+  try {
+    if (typeof process !== 'undefined' && process.env && process.env.REACT_APP_API_URL) {
+      return process.env.REACT_APP_API_URL;
+    }
+  } catch (e) {}
+  return 'http://localhost:5000/api';
+};
+
+const API_BASE_URL = getApiUrl();
 
 export const authService = {
   setSession: (userId: string) => {
