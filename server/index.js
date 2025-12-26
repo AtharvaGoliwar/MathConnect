@@ -65,7 +65,7 @@ const seedAdmin = async () => {
         id: 'admin-001',
         name: 'Super Admin',
         email: 'admin@tuition.com',
-        password: 'admin-secure-access', 
+        password: 'admin@1911', 
         role: 'ADMIN',
         avatarUrl: ''
       });
